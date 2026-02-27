@@ -15,12 +15,22 @@ PACKAGES = ('snowflake-snowpark-python')
 IMPORTS = ('/libs/udf.py')
 HANDLER = 'udf.grade_category';
 -- Create procedure
-CREATE OR REPLACE PROCEDURE app_student_schema.update_reference(ref_name STRING, ref_value STRING)
+CREATE OR REPLACE PROCEDURE app_student_schema.update_reference(ref_name STRING, operation STRING, ref_or_alias STRING)
 RETURNS STRING
 LANGUAGE SQL
 AS $$
 BEGIN
-    RETURN 'Reference updated';
+  CASE (operation)
+    WHEN 'ADD' THEN
+       SELECT system$set_reference(:ref_name, :ref_or_alias);
+    WHEN 'REMOVE' THEN
+       SELECT system$remove_reference(:ref_name, :ref_or_alias);
+    WHEN 'CLEAR' THEN
+       SELECT system$remove_all_references();
+    ELSE
+       RETURN 'Unknown operation: ' || operation;
+  END CASE;
+  RETURN 'Success';
 END;
 $$;
 
@@ -28,4 +38,4 @@ $$;
 GRANT USAGE ON SCHEMA app_student_schema TO APPLICATION ROLE app_student_role;
 GRANT SELECT ON VIEW app_student_schema.CLASS_TABLE to application role app_student_role;
 GRANT USAGE ON STREAMLIT app_student_schema.student_streamlit TO APPLICATION ROLE app_student_role;
-GRANT USAGE ON PROCEDURE app_student_schema.update_reference(string, string) TO APPLICATION ROLE app_student_role;
+GRANT USAGE ON PROCEDURE app_student_schema.update_reference(string, string, string) TO APPLICATION ROLE app_student_role;

@@ -1,0 +1,31 @@
+manifest_version: 1
+
+version:
+  name: V1
+  label: Version 1
+  comment: Student Class Management App
+
+artifacts:
+  setup_script: src/scripts/setup.sql
+  default_streamlit: app_student_schema.student_mgt_streamlit
+  extension_code: true
+  readme: README.md
+
+references:
+  - student_table:
+      label: "student table"
+      description: "Select student table"
+      privileges:
+        - SELECT
+      object_type: Table
+      multi_valued: false
+      register_callback: app_student_schema.update_reference
+  
+  - class_table:
+      label: "class table"
+      description: "Select class table"
+      privileges:
+        - SELECT
+      object_type: Table
+      multi_valued: false
+      register_callback: app_student_schema.update_reference

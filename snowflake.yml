@@ -1,0 +1,18 @@
+definition_version: 2
+entities:
+   student_mgt_pkg:
+      type: application package
+      stage: student_mgt_pkg_schema.app_stage
+      manifest: manifest.yml
+      identifier: student_mgt_pkg
+      artifacts:
+         - src: ./*
+           dest: ./
+      meta:
+         post_deploy:
+            - sql_script: src/scripts/pre_setup.sql
+   student_mgt_app_v1:
+      type: application
+      from:
+         target: student_mgt_pkg
+      debug: false

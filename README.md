@@ -237,6 +237,28 @@ This example app can be extended for:
 
 ---
 
+## Snowflake CLI
+
+Create environment
+
+``` code
+
+python -m venv venv
+
+.\venv\Scripts\activate
+
+python.exe -m pip install -r .\requirements.txt
+
+```
+
+Create connection to snowflake server
+
+``` code
+
+snow connection add
+
+```
+
 ## License
 
 Internal development example for educational purposes.
